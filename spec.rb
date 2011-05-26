@@ -2,21 +2,23 @@ class Cell
   attr_reader :adjacent_cells
   attr_accessor :contents
 
-  def initialize(char)
+  def initialize(char, x, y, above, left)
     @contents = char
     @adjacent_cells = []
+    add_adjacent_cell(above) if above
+    add_adjacent_cell(left) if left
   end
+  
+  private
   
   def add_adjacent_cell(cell)
     @adjacent_cells << cell
     cell.adjacent_cells << self
     cell
   end
-  
 end
 
 class AsciiGrid
-  
   def initialize(string)
     rows = string.split("\n")
     cells = Array.new(rows.size)
@@ -26,23 +28,14 @@ class AsciiGrid
       chars.each_with_index do |char, x| 
         above = y > 0 && cells[y-1][x]
         left  = x > 0 && cells[y][x-1]
-        cells[y][x] = create_cell(char, x, y, above, left)
+        cells[y][x] = Cell.new(char, x, y, above, left)
       end
     end
+    @origin = cells[0][0]
   end
   
   def origin
     @origin
-  end
-
-  private
-  
-  def create_cell(char, x, y, above, left)
-    cell = Cell.new(char)
-    cell.add_adjacent_cell(above) if above
-    cell.add_adjacent_cell(left) if left
-    @origin = cell if x == 0 && y == 0
-    cell
   end
   
 end
