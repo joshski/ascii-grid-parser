@@ -97,7 +97,6 @@ describe AsciiGrid do
     end
     
     it_should_behave_like "a grid with two letters"
-    
   end
   
   describe "when the source is 'F<NEWLINE>G'" do
@@ -106,7 +105,6 @@ describe AsciiGrid do
     end
     
     it_should_behave_like "a grid with two letters"
-    
   end
   
   describe "when the source is an 'ABC'" do
