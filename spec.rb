@@ -11,7 +11,7 @@ end
 class AsciiGrid
   
   def initialize(string)
-    chars = string.split("")
+    chars = string.gsub(/\n/, '').split("")
     previous_cell = @origin = Cell.new(chars.shift)
     chars.each do |char| 
       new_cell = Cell.new(char)
@@ -100,7 +100,14 @@ describe AsciiGrid do
     
   end
   
-
+  describe "when the source is 'F<NEWLINE>G'" do
+    let :two_letters do
+      "F\nG"
+    end
+    
+    it_should_behave_like "a grid with two letters"
+    
+  end
   
   describe "when the source is an 'ABC'" do
     let :grid do
