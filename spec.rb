@@ -6,18 +6,25 @@ class Cell
     @adjacent_cells = []
   end
   
+  def create_adjacent_cell(char)
+    new_cell = Cell.new(char)
+    @adjacent_cells << new_cell
+    new_cell.adjacent_cells << self
+    new_cell
+  end
+  
 end
 
 class AsciiGrid
   
   def initialize(string)
-    chars = string.gsub(/\n/, '').split("")
-    previous_cell = @origin = Cell.new(chars.shift)
-    chars.each do |char| 
-      new_cell = Cell.new(char)
-      new_cell.adjacent_cells << previous_cell
-      previous_cell.adjacent_cells << new_cell
-      previous_cell = new_cell
+    rows = string.split("\n")
+    rows.each do |row|
+      chars = row.split('')
+      previous_cell = @origin = Cell.new(chars.shift)
+      chars.each do |char| 
+        previous_cell.create_adjacent_cell(char)
+      end
     end
   end
   
@@ -99,7 +106,7 @@ describe AsciiGrid do
     it_should_behave_like "a grid with two letters"
   end
   
-  describe "when the source is 'F<NEWLINE>G'" do
+  describe "when the source is 'F\\nG'" do
     let :two_letters do
       "F\nG"
     end
@@ -107,7 +114,17 @@ describe AsciiGrid do
     it_should_behave_like "a grid with two letters"
   end
   
-  describe "when the source is an 'ABC'" do
+  describe "when the source is 'X\\nYZ'" do
+    let :grid do
+      AsciiGrid.new "XY\nZ"
+    end
+    
+    it "has an origin with two adjacent cells" do
+      grid.origin.should have(2).adjacent_cells
+    end
+  end
+  
+  describe "when the source is 'ABC'" do
     let :grid do
       AsciiGrid.new 'ABC'
     end
