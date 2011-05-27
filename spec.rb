@@ -47,68 +47,68 @@ class AsciiGrid
   end
 end
 
-shared_examples_for "a grid with a single letter" do
+shared_examples_for "parsing a single character" do
   let :origin do
-    AsciiGrid.new.parse single_letter
+    AsciiGrid.new.parse single_character
   end
   
-  it "has an origin with no adjacent cells" do
+  it "has no adjacent cells" do
     origin.should have(0).adjacent_cells
   end
   
-  it "has an origin containing the single letter" do
-    origin.contents.should == single_letter
+  it "contains the single character" do
+    origin.contents.should == single_character
   end
   
-  it "has an origin whose contents can be updated" do
+  it "has contents that can be updated" do
     origin.contents = 'Z'
     origin.contents.should == 'Z'
   end
   
   [:north, :south, :east, :west].each do |direction|
-    it "has an origin with no cell to the #{direction}" do
+    it "has no cell to the #{direction}" do
       origin.send(direction).should be_nil
     end
   end
 end
 
-shared_examples_for "a grid with two letters" do
+shared_examples_for "parsing two characters" do
   let :origin do
-    AsciiGrid.new.parse two_letters
+    AsciiGrid.new.parse two_characters
   end
   
-  it "has an origin with one adjacent cell" do
+  it "has one adjacent cell" do
     origin.should have(1).adjacent_cells
   end
   
-  it "has an origin containing the first letter" do
-    origin.contents.should == two_letters.chars.first
+  it "contains the first character" do
+    origin.contents.should == two_characters.chars.first
   end
   
-  it "has an origin adjacent to a cell containing the second letter" do
-    origin.adjacent_cells.first.contents.should == two_letters.split('').last
+  it "is adjacent to a cell containing the second character" do
+    origin.adjacent_cells.first.contents.should == two_characters.split('').last
   end
   
-  it "has an origin which is adjacent to a cell which has 1 adjacent cell" do
+  it "is adjacent to a cell which has 1 adjacent cell" do
     origin.adjacent_cells.first.should have(1).adjacent_cells
   end
 end
 
-shared_examples_for "a grid with two letters in a row" do
+shared_examples_for "parsing two characters in a row" do
   let :origin do
-    AsciiGrid.new.parse two_letters
+    AsciiGrid.new.parse two_characters
   end
   
-  it "has an origin with an adjacent cell to the east" do
-    origin.east.contents.should == two_letters.chars.to_a[1]
+  it "has a cell to the east" do
+    origin.east.contents.should == two_characters.chars.to_a[1]
   end
   
-  it "has an origin with an eastern cell that has the origin to the west" do
+  it "has an eastern cell that has the origin to the west" do
     origin.east.west.should == origin
   end
 
   [:north, :south].each do |direction|
-    it "has an origin with no cell to the #{direction}" do
+    it "has no cell to the #{direction}" do
       origin.send(direction).should be_nil
     end
     
@@ -119,40 +119,40 @@ shared_examples_for "a grid with two letters in a row" do
 end
 
 describe AsciiGrid do
-  describe "when the source is 'A'" do
-    let :single_letter do
+  describe "parsing 'A'" do
+    let :single_character do
       'A'
     end
 
-    it_should_behave_like "a grid with a single letter"
+    it_should_behave_like "parsing a single character"
   end
   
-  describe "when the source is 'B" do
-    let :single_letter do
+  describe "parsing 'B" do
+    let :single_character do
       'B'
     end
 
-    it_should_behave_like "a grid with a single letter"
+    it_should_behave_like "parsing a single character"
   end
 
-  describe "when the source is 'CD'" do
-    let :two_letters do
+  describe "parsing 'CD'" do
+    let :two_characters do
       'CD'
     end
     
-    it_should_behave_like "a grid with two letters"
-    it_should_behave_like "a grid with two letters in a row"
+    it_should_behave_like "parsing two characters"
+    it_should_behave_like "parsing two characters in a row"
   end
   
-  describe "when the source is 'E\\nF'" do
-    let :two_letters do
+  describe "parsing 'E\\nF'" do
+    let :two_characters do
       "E\nF"
     end
     
-    it_should_behave_like "a grid with two letters"
+    it_should_behave_like "parsing two characters"
   end
   
-  describe "when the source is 'GH\\nI'" do
+  describe "parsing 'GH\\nI'" do
     let :origin do
       AsciiGrid.new.parse "GH\nI"
     end
@@ -174,12 +174,12 @@ describe AsciiGrid do
     end
   end
   
-  describe "when the source is 'J\\nKL'" do
+  describe "parsing 'J\\nKL'" do
     let :origin do
       AsciiGrid.new.parse "J\nKL"
     end
     
-    it "has an origin with one adjacent cell" do
+    it "has one adjacent cell" do
       origin.should have(1).adjacent_cells
     end
     
@@ -196,7 +196,7 @@ describe AsciiGrid do
     end
   end
   
-  describe "when the source is 'MNO'" do
+  describe "parsing 'MNO'" do
     let :origin do
       AsciiGrid.new.parse 'MNO'
     end
@@ -210,7 +210,7 @@ describe AsciiGrid do
     end
   end
   
-  describe "when the source is 'PQ\\nRS'" do
+  describe "parsing 'PQ\\nRS'" do
     let :origin do
       AsciiGrid.new.parse "PQ\nRS"
     end
